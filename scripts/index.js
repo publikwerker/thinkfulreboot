@@ -1,46 +1,5 @@
 
 /**
- * @function decorateResponse
- * Uses Youtube API response to create an array of "decorated" video objects as 
- * defined at the top of the file.
- *   {
-    id: '98ds8fbsdy67',
-    title: 'Cats dancing the Macarena',
-    thumbnail: 'https://img.youtube.com/some/thumbnail.jpg'
-  }
- * @param   {object} response - should match Youtube API response shape
- * @returns {array}
- */
-// TASK:
-// 1. Map through the response object's `items` array
-// 2. Return an array of objects, where each object contains the keys `id`, `title`, 
-//    `thumbnail` which each hold the appropriate values from the API item object. You 
-//    WILL have to dig into several nested properties!
-//
-// TEST IT! Grab an example API response and send it into the function - make sure
-// you get back the object you want.
-const decorateResponse = function(response) {
-
-  // first, i checked to see if i could capture the values
-  //  for (let i = 0; i < response.items.length; i++) {
-  //    console.log(response.items[i].id.videoId);
-  //    console.log(response.items[i].snippet.title);
-  //    console.log(response.items[i].snippet.thumbnails.default.url);
-  //  };
-
-  // then i made the array
-  const decoration = [];
-  response.items.map(item => decoration.push(
-    {
-    id: `${item.id.videoId}`,
-    title: `${item.snippet.title}`,
-    thumbnail: `${item.snippet.thumbnails.default.url}`,
-  }));
-
-  return decoration;
-};
-
-/**
  * @function generateVideoItemHtml
  * Template function, creates an HTML string from a single decorated video object
  * @param   {object} video - decorated video object
@@ -50,28 +9,16 @@ const decorateResponse = function(response) {
 // 1. Using the decorated object, return an HTML string containing all the expected
 // TEST IT!
 const generateVideoItemHtml = function(video) {
-  return(`
-  <li>
-    <div id='${video.id}'>
-      <h2>${video.title}</h2>
-      <a href='http://www.youtube.com/watch?v=${video.id}'>
-        <img src='${video.thumbnail}' alt='visit the site' />
-      </a>
-    </div>
-  </li> 
-  `);
+  console.log('this function has moved');
 };
 
-/**
- * @function addVideosToStore
- * Store modification function to set decorated video objects
- * @param {array} videos - decorated video objects
- */
+
 // TASK:
 // 1. Set the received array as the value held in store.videos
 // TEST IT!
 const addVideosToStore = function(videos) {
   const theList = decorateResponse(videos);
+  console.log(theList);
   store.videos = theList;
   console.log(store.videos);
 };
@@ -85,7 +32,7 @@ const addVideosToStore = function(videos) {
 // 2. Add this array of DOM elements to the appropriate DOM element
 // TEST IT!
 const render = function() {
-  const videosToDisplay = store.videos.map(item => generateVideoItemHtml(item));
+  const videosToDisplay = store.videos.map(item => videoList.generateListItem(item));
   $('.results').html(videosToDisplay);
 };
 
@@ -94,24 +41,13 @@ const render = function() {
  * Adds form "submit" event listener that 1) initiates API call, 2) modifies store,
  * and 3) invokes render
  */
-// TASK:
-// 2. Add an event listener to the form that will:
-//   a) Prevent default event
-//   b) Retrieve the search input from the DOM
-//   c) Clear the search input field
-//   d) Invoke the `fetchVideos` function, sending in the search value
-//   e) Inside the callback, send the API response through the `decorateResponse` function
-//   f) Inside the callback, add the decorated response into your store using the 
-//      `addVideosToStore` function
-//   g) Inside the callback, run the `render` function 
-// TEST IT!
 const handleFormSubmit = function() {
   $('form').on('submit', function(event) {
     event.preventDefault();
     const queryTerm = $('#search-term').val();
     $('#search-term').val("");
     api.fetchVideos(queryTerm, (info => {
-      addVideosToStore(info);
+      store.setVideos(info);
       render();
     }));
   })
