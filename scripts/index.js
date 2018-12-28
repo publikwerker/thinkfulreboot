@@ -62,10 +62,6 @@ const fetchVideos = function(searchTerm, callback) {
   $.ajax(settings);
 };
 
-// tests the fetchVideos function
-fetchVideos('bob', (info => {
-  decorateResponse(info);
-}));
 
 /**
  * @function decorateResponse
@@ -95,6 +91,8 @@ const decorateResponse = function(response) {
   //    console.log(response.items[i].snippet.title);
   //    console.log(response.items[i].snippet.thumbnails.default.url);
   //  };
+
+  // then i made the array
   const decoration = [];
   response.items.map(item => decoration.push(
     {
@@ -103,9 +101,7 @@ const decorateResponse = function(response) {
     thumbnail: `${item.snippet.thumbnails.default.url}`,
   }));
 
-
-
-  console.log(decoration);
+  return decoration;
 };
 
 /**
@@ -118,8 +114,23 @@ const decorateResponse = function(response) {
 // 1. Using the decorated object, return an HTML string containing all the expected
 // TEST IT!
 const generateVideoItemHtml = function(video) {
-
+  return(`
+    <div>
+      <p>${video.id}</p>
+      <p>${video.title}</p>
+      <p>${video.url}</p>
+    </div>
+  `);
 };
+
+// TESTER tests the fetchVideos 
+// decorateResponse  generateVideoItemHtml functions
+fetchVideos('bob', (info => {
+  const theList = decorateResponse(info);
+  console.log(theList);
+  const theCode = theList.map(item => generateVideoItemHtml(item));
+  console.log(theCode);
+}));
 
 /**
  * @function addVideosToStore
