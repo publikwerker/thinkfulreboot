@@ -152,17 +152,6 @@ const render = function() {
   $('.results').html(videosToDisplay);
 };
 
-
-// TESTER tests the fetchVideos, decorateResponse,
-// generateVideoItemHtml, addVideosToStore functions
-// and inserting to HTML
-fetchVideos('bob', (info => {
-  addVideosToStore(info);
-  render();
-}));
-
-
-
 /**
  * @function handleFormSubmit
  * Adds form "submit" event listener that 1) initiates API call, 2) modifies store,
@@ -180,11 +169,20 @@ fetchVideos('bob', (info => {
 //   g) Inside the callback, run the `render` function 
 // TEST IT!
 const handleFormSubmit = function() {
-
+  $('form').on('submit', function(event) {
+    event.preventDefault();
+    const queryTerm = $('#search-term').val();
+    $('#search-term').val("");
+    fetchVideos(queryTerm, (info => {
+      addVideosToStore(info);
+      render();
+    }));
+  })
 };
 
 // When DOM is ready:
 $(function () {
   // TASK:
   // 1. Run `handleFormSubmit` to bind the event listener to the DOM
+  handleFormSubmit();
 });
