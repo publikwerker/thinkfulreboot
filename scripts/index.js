@@ -1,4 +1,4 @@
-const API_KEY = 'YOUR_KEY_HERE';
+const API_KEY = 'AIzaSyAuD_JlyrZ6quDVxvm0m0bsYAv7Jbmf2Tw';
 
 /*
   We want our store to hold an array of "decorated" video objects - i.e. objects that
@@ -19,7 +19,7 @@ const store = {
 
 // TASK: Add the Youtube Search API Base URL here:
 // Documentation is here: https://developers.google.com/youtube/v3/docs/search/list#usage
-const BASE_URL = '';
+const BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
 
 /**
  * @function fetchVideos
@@ -37,12 +37,45 @@ const BASE_URL = '';
 // TEST IT! Execute this function and console log the results inside the callback.
 const fetchVideos = function(searchTerm, callback) {
 
+  // made the GET request with .getJSON, first
+  //const query = {
+  //  key: API_KEY,
+  //  part:  'snippet' ,
+  //  q: `${searchTerm} in:name`,
+  //  per_page: 5
+  //}
+  // $.getJSON(BASE_URL, query, callback);
+
+  // then, i made the GET request using .AJAX
+  const settings = {
+    url: BASE_URL,
+    data: {
+      key: API_KEY,
+      part:  'snippet' ,
+      q: `${searchTerm} in:name`,
+      per_page: 5
+    },
+    dataType: 'json',
+    type: 'GET',
+    success: callback
+  };
+  $.ajax(settings);
 };
+
+// tests the fetchVideos function
+fetchVideos('bob', (info => {
+  decorateResponse(info);
+}));
 
 /**
  * @function decorateResponse
  * Uses Youtube API response to create an array of "decorated" video objects as 
  * defined at the top of the file.
+ *   {
+    id: '98ds8fbsdy67',
+    title: 'Cats dancing the Macarena',
+    thumbnail: 'https://img.youtube.com/some/thumbnail.jpg'
+  }
  * @param   {object} response - should match Youtube API response shape
  * @returns {array}
  */
@@ -56,6 +89,23 @@ const fetchVideos = function(searchTerm, callback) {
 // you get back the object you want.
 const decorateResponse = function(response) {
 
+  // first, i checked to see if i could capture the values
+  //  for (let i = 0; i < response.items.length; i++) {
+  //    console.log(response.items[i].id.videoId);
+  //    console.log(response.items[i].snippet.title);
+  //    console.log(response.items[i].snippet.thumbnails.default.url);
+  //  };
+  const decoration = [];
+  response.items.map(item => decoration.push(
+    {
+    id: `${item.id.videoId}`,
+    title: `${item.snippet.title}`,
+    thumbnail: `${item.snippet.thumbnails.default.url}`,
+  }));
+
+
+
+  console.log(decoration);
 };
 
 /**
