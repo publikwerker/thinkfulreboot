@@ -125,16 +125,6 @@ const generateVideoItemHtml = function(video) {
   `);
 };
 
-// TESTER tests the fetchVideos 
-// decorateResponse  generateVideoItemHtml functions
-fetchVideos('bob', (info => {
-  const theList = decorateResponse(info);
-  console.log(theList);
-  const theCode = theList.map(item => generateVideoItemHtml(item));
-  console.log(theCode);
-  $('.results').html(theCode);
-}));
-
 /**
  * @function addVideosToStore
  * Store modification function to set decorated video objects
@@ -144,9 +134,10 @@ fetchVideos('bob', (info => {
 // 1. Set the received array as the value held in store.videos
 // TEST IT!
 const addVideosToStore = function(videos) {
-
+  const theList = decorateResponse(videos);
+  store.videos = theList;
+  console.log(store.videos);
 };
-
 
 /**
  * @function render
@@ -157,8 +148,20 @@ const addVideosToStore = function(videos) {
 // 2. Add this array of DOM elements to the appropriate DOM element
 // TEST IT!
 const render = function() {
-
+  const videosToDisplay = store.videos.map(item => generateVideoItemHtml(item));
+  $('.results').html(videosToDisplay);
 };
+
+
+// TESTER tests the fetchVideos, decorateResponse,
+// generateVideoItemHtml, addVideosToStore functions
+// and inserting to HTML
+fetchVideos('bob', (info => {
+  addVideosToStore(info);
+  render();
+}));
+
+
 
 /**
  * @function handleFormSubmit
