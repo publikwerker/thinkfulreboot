@@ -118,8 +118,9 @@ const generateVideoItemHtml = function(video) {
   <li>
     <div id='${video.id}'>
       <h2>${video.title}</h2>
-      <img src='${video.thumbnail}'/>
-      <p>${video.thumbnail}</p>
+      <a href='http://www.youtube.com/watch?v=${video.id}'>
+        <img src='${video.thumbnail}' alt='visit the site' />
+      </a>
     </div>
   </li> 
   `);
