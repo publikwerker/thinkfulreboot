@@ -115,11 +115,13 @@ const decorateResponse = function(response) {
 // TEST IT!
 const generateVideoItemHtml = function(video) {
   return(`
-    <div>
-      <p>${video.id}</p>
-      <p>${video.title}</p>
-      <p>${video.url}</p>
+  <li>
+    <div id='${video.id}'>
+      <h2>${video.title}</h2>
+      <img src='${video.thumbnail}'/>
+      <p>${video.thumbnail}</p>
     </div>
+  </li> 
   `);
 };
 
@@ -130,6 +132,7 @@ fetchVideos('bob', (info => {
   console.log(theList);
   const theCode = theList.map(item => generateVideoItemHtml(item));
   console.log(theCode);
+  $('.results').html(theCode);
 }));
 
 /**
